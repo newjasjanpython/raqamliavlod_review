@@ -71,7 +71,7 @@
                                 <div class="left">
                                     <div class="left__inner">
                                         <div class="imgContaienr">
-                                            <img src="{{ forum.user.profile_image.url }}" alt="">
+                                            <img src="{% if forum.user.profile_image %}{{ forum.user.profile_image.url }}{% else %}/static/img/noimage.webp{% endif %}" alt="">
                                         </div>
                                         <div class="textContainer">
                                             <p><a href="{% url 'forum-detail' forum.id %}">{{ forum.title }}</a></p>

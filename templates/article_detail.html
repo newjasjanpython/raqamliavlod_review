@@ -406,7 +406,8 @@
                     </div>
                     {% endfor %}
                 </div>
-                <div class="w-full h-max flex flex-col justify-start items-start gap-10">
+                <div style="border-top:1px solid #333;" class="w-full h-max flex flex-col justify-start items-start gap-10"></br>
+			<h2 style="font-size:30px;"><b>O'xshash maqolalar</b></h2>
                     {% for r in related %}
                         <a style="color: blue;text-decoration: underline;" href="{% url 'article_detail' r.id %}">{{ r }}</a>
                     {% endfor %}

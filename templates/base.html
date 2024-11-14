@@ -220,7 +220,7 @@
                             role="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start"
                             alt="avatar" loading="eager" width="80" height="80" decoding="async" data-nimg="1"
                             class="h-10 w-10 md:w-12 lg:w-14 md:h-12 lg:h-14 rounded-full object-cover"
-                            src="{% if user.profile_image %}{{ request.user.profile_image.url }}{% else %}{{ request.user.first_name }}{% endif %}"
+                            src="{% if user.profile_image %}{{ request.user.profile_image.url }}{% else %}/static/img/noimage.webp{% endif %}"
                             style="color: transparent;">
                     </div>
                 {% else %}
