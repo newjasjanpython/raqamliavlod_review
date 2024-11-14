@@ -137,45 +137,48 @@ class UserMasalaRelation(models.Model):
         ordering = ["-time"]
         
     def get_script_result(self):
-        self_folder = os.path.join(settings.MEDIA_ROOT, "scripts", str(self.id))
-        passed = True
-        print(self_folder, self.id, 145)
-        for num, test in enumerate(self.masala.tests.all()):
-            subprocess.run(["touch",str(os.path.join(settings.MEDIA_ROOT, "scripts", str(self.id), f"input{num}.txt"))])
-            with open(str(os.path.join(settings.MEDIA_ROOT, "scripts", str(self.id), f"input{num}.txt")), "w") as txt:
-                    txt.write(test.kirish)
-            if self.language == 'C++':
-                result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "gcc:latest", "sh", "-c", f"g++ /scripts/{os.path.basename(self.script.url)} -o /scripts/result && /scripts/result < /scripts/input{num}.txt"], check=True, capture_output=True)
-                self.script_result = result.stdout.decode().strip()
-                if self.script_result == test.output:
-                    passed = True
-                else:
-                    passed = False
-            elif self.language == 'C':
-                result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "gcc:latest", "sh", "-c", f"gcc /scripts/{os.path.basename(self.script.url)} -o /scripts/result && /scripts/result < /scripts/input{num}.txt"], check=True, capture_output=True)
-                self.script_result = result.stdout.decode().strip()
-                if self.script_result == test.output:
-                    passed = True
-                else:
-                    passed = False
-            elif self.language == 'Java':
-                result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "openjdk:latest","sh","-c",f"javac /scripts/{os.path.basename(self.script.url)} && java -cp /scripts {os.path.basename(self.script.url).split('.')[0]} < /scripts/input{num}.txt"], check=True, capture_output=True)
-                self.script_result = result.stdout.decode().strip()
-                if self.script_result == test.output:
-                    passed = True
-                else:
-                    passed = False
-            elif self.language == 'Python':
-                result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "python:3.9", "sh", "-c", f"python /scripts/{os.path.basename(self.script.url)} < /scripts/input{num}.txt"], check=True, capture_output=True)
-                self.script_result = result.stdout.decode().strip()
-                if self.script_result == test.output:
-                    passed = True
-                else:
-                    passed = False
-        if passed:
-            self.state = '🟢 Passed'
-        else:
-            self.state = '🔴 Failed'
+        try:
+            self_folder = os.path.join(settings.MEDIA_ROOT, "scripts", str(self.id))
+            passed = True
+            print(self_folder, self.id, 145)
+            for num, test in enumerate(self.masala.tests.all()):
+                subprocess.run(["touch",str(os.path.join(settings.MEDIA_ROOT, "scripts", str(self.id), f"input{num}.txt"))])
+                with open(str(os.path.join(settings.MEDIA_ROOT, "scripts", str(self.id), f"input{num}.txt")), "w") as txt:
+                        txt.write(test.kirish)
+                if self.language == 'C++':
+                    result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "gcc:latest", "sh", "-c", f"g++ /scripts/{os.path.basename(self.script.url)} -o /scripts/result && /scripts/result < /scripts/input{num}.txt"], check=True, capture_output=True)
+                    self.script_result = result.stdout.decode().strip()
+                    if self.script_result == test.output:
+                        passed = True
+                    else:
+                        passed = False
+                elif self.language == 'C':
+                    result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "gcc:latest", "sh", "-c", f"gcc /scripts/{os.path.basename(self.script.url)} -o /scripts/result && /scripts/result < /scripts/input{num}.txt"], check=True, capture_output=True)
+                    self.script_result = result.stdout.decode().strip()
+                    if self.script_result == test.output:
+                        passed = True
+                    else:
+                        passed = False
+                elif self.language == 'Java':
+                    result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "openjdk:latest","sh","-c",f"javac /scripts/{os.path.basename(self.script.url)} && java -cp /scripts {os.path.basename(self.script.url).split('.')[0]} < /scripts/input{num}.txt"], check=True, capture_output=True)
+                    self.script_result = result.stdout.decode().strip()
+                    if self.script_result == test.output:
+                        passed = True
+                    else:
+                        passed = False
+                elif self.language == 'Python':
+                    result = subprocess.run(["docker", "run", "--rm", "-v", f"{self_folder}:/scripts", "python:3.9", "sh", "-c", f"python /scripts/{os.path.basename(self.script.url)} < /scripts/input{num}.txt"], check=True, capture_output=True)
+                    self.script_result = result.stdout.decode().strip()
+                    if self.script_result == test.output:
+                        passed = True
+                    else:
+                        passed = False
+            if passed:
+                self.state = '🟢 Passed'
+            else:
+                self.state = '🔴 Failed'
+        except Exception as err:
+            self.state = "🔴 timeout"
         self.save()
     
     def save(self):

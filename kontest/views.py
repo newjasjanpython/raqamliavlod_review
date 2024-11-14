@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import models
 
@@ -72,6 +73,7 @@ def kontest_qatnashuvchilar(request, kontest_id):
         'pagename':'kontest'
     })
 
+@login_required(login_url="/users/login/")
 def masala_detail(request, masala_id):
     masala = get_object_or_404(Masala, id=masala_id)
     if request.method == "POST" and request.user.is_authenticated:
