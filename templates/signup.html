@@ -191,7 +191,8 @@
                 </svg>
             </a>
         </div>
-        {{ form.errors }}
+	<style>.errorlist *{color:red;}</style>
+        <p style="color:red;">{{ form.errors }}</p>
         <form action="" method="post" class="formContainer">{% csrf_token %}
             <div>
                 <input type="text" name="first_name" id="firstName" required>
