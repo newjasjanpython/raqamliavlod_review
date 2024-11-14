@@ -55,6 +55,42 @@ body {
     font-size: 16px;
 }
 
+.select-container {
+    display: flex;
+    gap: 20px;
+    flex-direction: unset !important;
+}
+
+.select-container select {
+    width: 50%;
+}
+
+#row {
+    display: flex;
+    flex-direction: unset !important;
+    gap: 20px;
+}
+
+.a {
+    width: 50% !important; 
+}
+
+
+.container form select {
+    height: 40px;
+    border: 1px solid #3e67a8;
+    outline: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    color: #3e67a8;
+    background-color: transparent;
+    font-size: 16px;
+}
+
+input::placeholder {
+    color: #3e67a8;
+}
+
 .container form div label {
     position: absolute;
     top: 50%;
@@ -130,5 +166,24 @@ body {
 
     #other {
         justify-content: space-between;
+    }
+
+    input {
+        font-size: 15px !important;
+    }
+    .select-container, #row {
+        gap: 10px;
+    }
+
+    .container form {
+        row-gap: 20px;
+    }
+
+    .container {
+        padding: 20px 15px;
+    }
+
+    .a {
+        width: 48.5% !important;
     }
 }

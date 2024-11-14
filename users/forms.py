@@ -9,4 +9,4 @@ class UserCreationForm(UCF):
     
     class Meta:
         model = User
-        fields = ('first_name', 'last_name','username','email')
+        fields = ('first_name', 'last_name','username','email', 'telefon', 'viloyat', 'tuman', 'maktab')

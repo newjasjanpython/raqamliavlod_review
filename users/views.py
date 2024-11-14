@@ -18,6 +18,7 @@ def signup_view(request):
             return redirect('home')
     else:
         form = UserCreationForm()
+    print(form.errors, 21)
     return render(request, 'signup.html', {'form': form})
 
 def login_view(request):
