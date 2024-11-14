@@ -83,6 +83,9 @@ class Masala(models.Model):
     
     ball = models.IntegerField(default=5)
 
+    def __str__(self):
+        return self.title
+    
     def umumiy_javoblar(self):
         return 4==self.objects.ishlaganlar.filter(user=self.user, masala=self, state='🟢 Passed').count()
 

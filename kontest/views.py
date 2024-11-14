@@ -77,6 +77,7 @@ def kontest_qatnashuvchilar(request, kontest_id):
 def masala_detail(request, masala_id):
     masala = get_object_or_404(Masala, id=masala_id)
     if request.method == "POST" and request.user.is_authenticated:
+        
         form = UserMasalaRelationForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
