@@ -82,6 +82,7 @@ class Masala(models.Model):
     )
     
     ball = models.IntegerField(default=5)
+    hidden = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

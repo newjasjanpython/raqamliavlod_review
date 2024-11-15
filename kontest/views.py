@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import models
@@ -29,7 +29,12 @@ def musobaqalar(request):
     })
 
 def masalalar(request):
-    masalalar = Masala.objects.all()
+    q = request.GET.get("q")
+    masalalar = Masala.objects.filter(hidden=False)
+    if q:
+        masalalar = masalalar.filter(title__contains=q, hidden=False)
+    else:
+        q = ""
     paginator = Paginator(masalalar, 4)
     page_num = request.GET.get('page', 1)
     page = paginator.get_page(page_num)
@@ -39,6 +44,7 @@ def masalalar(request):
         'page':page,
         'total_pages':paginator.num_pages,
         'pages':paginator.page_range,
+        'q':q
     })
 
 def kontest_detail(request, kontest_id):
@@ -76,6 +82,8 @@ def kontest_qatnashuvchilar(request, kontest_id):
 @login_required(login_url="/users/login/")
 def masala_detail(request, masala_id):
     masala = get_object_or_404(Masala, id=masala_id)
+    if masala.hidden:
+        return redirect("/")
     if request.method == "POST" and request.user.is_authenticated:
         
         form = UserMasalaRelationForm(request.POST, request.FILES)
