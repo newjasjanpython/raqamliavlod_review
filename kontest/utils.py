@@ -2,6 +2,7 @@ from django.conf import settings
 import requests
 import time
 import os
+import shutil
 import io
 import pathlib
 import subprocess
@@ -125,20 +126,24 @@ class Code:
         folder.mkdir(exist_ok=True)
         script_file = str(folder / 'script.file')
 
-        with open(script_file, 'w') as file:
-            file.write(self.code)
-
         if hasattr(RunCmdGenerator, self.language):
+            with open(script_file, 'w') as file:
+                file.write(self.code)
+
             func = getattr(RunCmdGenerator, self.language)
 
             for index in range(len(self.inputs)):
                 file_input, file_output = self.inputs[index], self.outputs[index]
                 output = func(script_file, file_input)
                 if output == "":
+                    shutil.rmtree(str(folder))
                     return "Error code"
                 elif output != file_output:
+                    shutil.rmtree(str(folder))
                     return "Incorrect code"
+            shutil.rmtree(str(folder))
             return "Correct code"
+        shutil.rmtree(str(folder))
 
     def send(self, stdin):
         request_id = PaizaIO.send_request(self.code, self.language, stdin)
