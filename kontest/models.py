@@ -91,7 +91,7 @@ class Masala(models.Model):
         return 4==self.objects.ishlaganlar.filter(user=self.user, masala=self, state='🟢 Passed').count()
 
     def togri_yechimlar(self):
-        return UserMasalaRelation.objects.filter(state='🟢 Passed').count()
+        return UserMasalaRelation.objects.filter(masala=self, state='🟢 Passed').count()
     
     def qatnashuvchilar(self):
         return self.ishlaganlar.values('user').distinct().count()
