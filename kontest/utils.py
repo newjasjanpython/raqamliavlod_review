@@ -13,8 +13,6 @@ DFILES = pathlib.Path(settings.BASE_DIR / 'dfiles')
 if not DFILES.exists():
     DFILES.mkdir(exist_ok=True)
 
-import subprocess
-
 class RunCmdGenerator:
     @staticmethod
     def python3(path, input_string):
@@ -38,7 +36,7 @@ class PaizaIO:
     headers = {}
 
     @staticmethod
-    def send_request(code, language, stdin=None, options=None) -> (str | None):
+    def send_request(code, language, stdin=None, options=None):
         if stdin is None:
             stdin = ""
         if options is None:
@@ -59,7 +57,7 @@ class PaizaIO:
         return None
 
     @staticmethod
-    def check_status(result_id: str) -> (str | None):
+    def check_status(result_id: str):
         data = {
             "api_key": PaizaIO.api_key,
             "id": result_id
@@ -72,7 +70,7 @@ class PaizaIO:
         return None
 
     @staticmethod
-    def terminal_output(result_id: str) -> (dict | None):
+    def terminal_output(result_id: str):
         data = {
             "api_key": PaizaIO.api_key,
             "id": result_id
@@ -89,7 +87,7 @@ class PaizaIO:
         return None
 
 class Code:
-    def __init__(self, mid, inputs, outputs, code) -> None:
+    def __init__(self, mid, inputs, outputs, code):
         self.mid = mid
         self.inputs = inputs
         self.outputs = outputs
@@ -135,6 +133,7 @@ class Code:
             for index in range(len(self.inputs)):
                 file_input, file_output = self.inputs[index], self.outputs[index]
                 output = func(script_file, file_input)
+                print(output, file_output)  
                 if output == "":
                     shutil.rmtree(str(folder))
                     return "Error code"
