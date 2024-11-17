@@ -36,7 +36,7 @@ def login_view(request):
                 return redirect('home')
     else:
         form = CustomAuthenticationForm()
-    return render(request, 'login_errors.html', {'form': form,"form_errors":form.errors["__all__"]})
+    return render(request, 'login_errors.html', {'form': form,"form_errors":form.errors.get("__all__")})
 
 @csrf_exempt
 def logout_view(request):
