@@ -5,6 +5,13 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        error_messages={
+            'unique': 'Bu foydalanuvchi nomi band. Iltimos, boshqa nom kiriting.',
+        }
+    )
     profile_image = models.ImageField(upload_to="pfiles/", null=True, blank=True)
     telefon = models.CharField(max_length=20, default="Kiritilmagan")
     telegram = models.CharField(max_length=150, default="Kiritilmagan")

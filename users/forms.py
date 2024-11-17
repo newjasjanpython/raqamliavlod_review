@@ -14,8 +14,14 @@ class UserCreationForm(UCF):
         fields = ('first_name', 'last_name','username','email', 'telefon', 'viloyat', 'tuman', 'maktab')
 
 class UserModelForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.error_messages.update({
+        "required":"To'ldirish majburiy",
+        "invalid":"Noto'g'ri qiymat",
+        "unique":"Avval foydalanilgan"
+    })
     profile_image = forms.ImageField(widget=forms.FileInput({"accept":"image/*"}), required=False)
-    
     class Meta:
         model = User
         fields = ("first_name","last_name","username","telefon","telegram","viloyat","tuman","maktab", "profile_image")
