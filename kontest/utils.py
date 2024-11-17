@@ -1,5 +1,35 @@
+from django.conf import settings
 import requests
 import time
+import os
+import io
+import pathlib
+import subprocess
+
+
+DFILES = pathlib.Path(settings.BASE_DIR / 'dfiles')
+
+if not DFILES.exists():
+    DFILES.mkdir(exist_ok=True)
+
+import subprocess
+
+class RunCmdGenerator:
+    @staticmethod
+    def python3(path, input_string):
+        process = subprocess.Popen(
+            ["python3", path],
+            text=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        stdout, stderr = process.communicate(input=input_string)
+        process.wait()
+        if process.returncode != 0:
+            raise Exception(f"Error occurred: {stderr}")
+        
+        return "".join(stdout.split())
 
 
 class PaizaIO:
@@ -58,17 +88,20 @@ class PaizaIO:
         return None
 
 class Code:
-    def __init__(self, inputs: list[str], outputs: list[str], code: str) -> None:
-        self.inputs = []
-        self.outputs = []
+    def __init__(self, mid, inputs, outputs, code) -> None:
+        self.mid = mid
+        self.inputs = inputs
+        self.outputs = outputs
         self.code = code
-        self.languge = "python3"
+        self.language = "python3"
 
     def precheck(self):
         print(self.inputs, self.outputs)
         first_input, first_output = self.inputs[0], self.outputs[0]
 
-        output = send(first_input)
+        output = self.send(first_input)
+        print(output)
+        print(output, first_output, "Precheck", first_input, first_output)
         if output == first_output:
             return "Correct code"
         elif output == "":
@@ -77,19 +110,39 @@ class Code:
             return "Incorrect code"
 
     def check(self):
-        for index in range(0, len(self.inputs)):
-            print("Print running test", index+1)
-            file_input, file_output = self.inputs[index], self.outputs[index]
-            output = self.send(file_input)
-            if output != file_output:
-                return "Incorrect code"
-            elif output == "":
-                return "Error code"
-        return "Correct code"
+        # for index in range(len(self.inputs)):
+        #     print("Print running test", index+1)
+        #     file_input, file_output = self.inputs[index], self.outputs[index]
+        #     output = self.send(file_input)
+        #     print(output, index+1, "|", file_input, file_output)
+        #     if output != file_output:
+        #         return "Incorrect code"
+        #     elif output == "":
+        #         return "Error code"
+        # return "Correct code"
+
+        folder = DFILES / f"fl{self.mid}"
+        folder.mkdir(exist_ok=True)
+        script_file = str(folder / 'script.file')
+
+        with open(script_file, 'w') as file:
+            file.write(self.code)
+
+        if hasattr(RunCmdGenerator, self.language):
+            func = getattr(RunCmdGenerator, self.language)
+
+            for index in range(len(self.inputs)):
+                file_input, file_output = self.inputs[index], self.outputs[index]
+                output = func(script_file, file_input)
+                if output == "":
+                    return "Error code"
+                elif output != file_output:
+                    return "Incorrect code"
+            return "Correct code"
 
     def send(self, stdin):
         request_id = PaizaIO.send_request(self.code, self.language, stdin)
         while PaizaIO.check_status(request_id) != "completed":
             time.sleep(1)
-        return terminal_output().get('stdout')
+        return PaizaIO.terminal_output(request_id).get("stdout").strip('\n').strip()
 
