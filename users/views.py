@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
+
 from django.views.decorators.csrf import csrf_exempt
 
-from .forms import UserCreationForm
+from .forms import UserCreationForm, UserModelForm, CustomAuthenticationForm
 
 @csrf_exempt
 def signup_view(request):
@@ -20,12 +21,12 @@ def signup_view(request):
     else:
         form = UserCreationForm()
     print(form.errors, 21)
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'signup_errors.html', {'form': form})
 
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -34,10 +35,21 @@ def login_view(request):
                 login(request, user)
                 return redirect('home')
     else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+        form = CustomAuthenticationForm()
+    return render(request, 'login_errors.html', {'form': form,"form_errors":form.errors["__all__"]})
 
 @csrf_exempt
 def logout_view(request):
     logout(request)
     return redirect('home') 
+ 
+@login_required(login_url="login")
+def profile(request):
+    if request.method == "POST":
+        form = UserModelForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = UserModelForm(instance=request.user)
+    return render(request, "profile_errors.html", {"form":form})

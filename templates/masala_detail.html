@@ -57,16 +57,18 @@
                             <h1 class="w-full text-sm md:text-lg lg:text-xl font-bold">Input</h1>
                             <h1 class="w-full text-sm md:text-lg lg:text-xl font-bold">Output</h1>
                         </section>
-                        {% for test in masala.tests.all|slice:":4" %}
-                        <section class="w-full h-max flex flex-row justify-center items-start gap-4 px-4 border-b rounded-md border border-purple-500">
-                            <p class="text-sm md:text-bas lg:text-base py-4 w-min flex">{{ forloop.counter }}</p>
-                            <p class="text-sm md:text-bas lg:text-base w-full  border-x border-purple-500 py-4 px-4 flex flex-col justify-start items-start break-words h-full">
-                                {{ test.kirish }}
-                            </p>
-                            <p class="text-sm md:text-bas lg:text-base w-full flex flex-col justify-start items-start py-4 break-words">
-                                {{ test.output }}
-                            </p>
-                        </section>
+                        {% for test in masala.tests.all %}
+                            {% if not test.hidden %}
+                                <section class="w-full h-max flex flex-row justify-center items-start gap-4 px-4 border-b rounded-md border border-purple-500">
+                                    <p class="text-sm md:text-bas lg:text-base py-4 w-min flex">{{ forloop.counter }}</p>
+                                    <p class="text-sm md:text-bas lg:text-base w-full  border-x border-purple-500 py-4 px-4 flex flex-col justify-start items-start break-words h-full">
+                                        {{ test.kirish }}
+                                    </p>
+                                    <p class="text-sm md:text-bas lg:text-base w-full flex flex-col justify-start items-start py-4 break-words">
+                                        {{ test.output }}
+                                    </p>
+                                </section>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="w-full h-max flex flex-col justify-center items-start ">

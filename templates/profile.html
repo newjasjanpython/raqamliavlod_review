@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load increment %}
+
+{% block content %}
+
+<style>
+    .img-cont img{
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+    /* 
+    html, body {
+        height: unset !important;
+        overflow-y: unset !important;
+    } */
+
+    * {
+        box-sizing: border-box;
+    }
+
+    #fform {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        padding: 20px 50px;
+    }
+
+    #fform * {
+        list-style: none;
+    }
+
+    .color {
+        color: #1977DC;
+    }
+
+    table {
+        width: 450px;
+    }
+
+    table tr {
+        margin: 20px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    td {
+        color: #8C8D9B;
+    }
+
+    td input {
+        padding: 7px;
+        border-radius: 7px;
+        outline: none;
+        height: 40px;
+        background-color: #fff;
+        width: 250px;
+
+    }
+
+    td input:focus,
+    td input:valid {
+        border: 2px solid #1977DC;
+    }
+
+    td select {
+        padding: 7px;
+        border-radius: 7px;
+        outline: none;
+        width: 250px;
+        height: 40px;
+    }
+
+    td select:focus,
+    td input:valid {
+        border: 2px solid #1977DC;
+    }
+
+    .edit-profile {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .edit-profile ul li button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 5px;
+        color: #2B385D;
+        margin-top: 5px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            width: 25px;
+        }
+    }
+
+
+    #rasm_label {
+        width: 250px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        border: 2px solid #1977DC;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    #rasm_label:hover {
+        background-color: #1977DC;
+        color: #fff;
+    }
+
+    body,
+    html {
+        overflow-y: unset;
+        height: unset !important;
+    }
+
+    #save-button {
+        background-color: #1977DC;
+        border-radius: 10px;
+        width: 200px;
+        height: 40px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        color: #fff;
+    }
+
+    .passwords {
+        display: none;
+    }
+
+    @media screen and (max-width: 500px) {
+        table {
+            width: 100%;
+        }
+
+        table tr {
+            flex-direction: column;
+            row-gap: 5px;
+        }
+
+        table tr td {
+            width: 100%;
+        }
+
+        #fform {
+            flex-direction: column-reverse;
+        }
+
+        .img-cont {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+            }
+        }
+        .img-cont img{
+            height: 200px !important;
+            width: 200px !important;
+            border-radius: 50% !important;
+        }
+
+        input,
+        td select {
+            width: 100%;
+        }
+
+        #rasm_label {
+            width: 100%;
+        }
+    }
+</style>
+<div style="overflow: unset; gap: 20px;"
+    class="w-full flex flex-col md:flex-row lg:flex-row flex-nowrap justify-between items-center md:justify-start md:items-start lg:justify-start lg:items-start box-border">
+    {% include 'left_menu.html' %}
+    <div class="w-full flex flex-col justify-between items-start bg-[#F4F4F4] gap-5 box-border order-1 md:order-2 lg:order-2 xl:order-2 2xl-order-2 relative">
+        <form id="fform" enctype="multipart/form-data" method="post">{% csrf_token %}
+            <table>
+                <tr class="otherInp">
+                    <td class="color">
+                        Rasmni o'zgartirish:
+                    </td>
+                    <td>
+                        <input type="file" id="id_profile_image" name="profile_image" style="display: none;"     disabled>
+                        <label for="id_profile_image" id="rasm_label">Rasmni o'zgartirish</label>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Ism:{{form.errors}}
+                    </td>
+                    <td>
+                        <input type="text" name="first_name" value="{{ user.first_name }}" disabled>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Familiya:
+                    </td>
+                    <td>
+                        <input type="text" name="last_name" value="{{user.last_name}}" disabled>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Foydalanuvchi nomi:
+                    </td>
+                    <td>
+                        <input type="text" name="username" value="{{user.username}}" disabled>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Viloyat:
+                    </td>
+                    <td>
+                        <select id="region" name="viloyat" disabled>
+                            <option value="" disabled>Viloyatni tanlang</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Tuman:
+                    </td>
+                    <td>
+                        <select id="district" name="tuman" disabled>
+                            <option value="" disabled>Tuman tanlang</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Telefon raqami:
+                    </td>
+                    <td>
+                        <input type="text" name="telefon" value="{{user.telefon}}" disabled>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Telegram:
+                    </td>
+                    <td>
+                        <input type="text" name="telegram" value="{{user.telegram}}" disabled>
+                    </td>
+                </tr>
+                <tr class="otherInp">
+                    <td class="color">
+                        Maktab:
+                    </td>
+                    <td>
+                        <input type="text" name="maktab" value="{{form.maktab.value}}" disabled>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="save-button" type="submit" style="display: none;">Saqlash</button>
+                    </td>
+                </tr>
+            </table>
+            <div class="edit-profile">
+                <div class="img-cont">
+                    <img src="{% if request.user.profile_image %}{{request.user.profile_image.url}}{% else %} /static/img/noimage.webp{% endif %}" alt="">
+                </div>
+                <ul>
+                    <!-- <li>
+                        <button><img src="{% static 'img/Camera.png' %}" alt="">Rasmni o'zgartirish</button>
+                    </li> -->
+                    <li>
+                        <button type="button" onclick="changePassword()"><img src="{% static 'img/addkey.jpg' %}"
+                                alt="">Parollni o'zgartirish</button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="editProfile()"><img src="{% static 'img/edit.jpg' %}"
+                                alt="">Profilni taxrirlash</button>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    // Viloyatlar va tumanlar ma'lumotlari
+    const regions = {
+        "Toshkent shahri": ["Bektemir", "Mirzo Ulug'bek", "Yunusobod", "Chilonzor", "Yakkasaroy", "Shayxontohur", "Uchtepa", "Olmazor", "Sergeli", "Mirobod", "Yashnobod"],
+        "Toshkent viloyati": ["Bekobod", "Bo'stonliq", "Bo'ka", "Chinoz", "Qibray", "Oqqo'rg'on", "Parkent", "Piskent", "Toshkent tumani", "Yuqorichirchiq", "Zangiota"],
+        "Andijon viloyati": ["Andijon", "Asaka", "Bo'z", "Buloqboshi", "Izboskan", "Jalaquduq", "Qo'rg'ontepa", "Marhamat", "Oltinko'l", "Paxtaobod", "Shahrixon", "Xo'jaobod", "Andijon shahri"],
+        "Buxoro viloyati": ["Buxoro", "G'ijduvon", "Jondor", "Kogon", "Olot", "Peshku", "Qorako'l", "Qorovulbozor", "Romitan", "Shofirkon", "Vobkent"],
+        "Farg‘ona viloyati": ["Farg‘ona", "Qo'qon", "Marg'ilon", "Quvasoy", "Oltiariq", "Bag'dod", "Beshariq", "Furqat", "Qo'shtepa", "Rishton", "So'x", "Toshloq", "Uchko'prik", "Yozyovon"],
+        "Jizzax viloyati": ["Arnasoy", "Baxmal", "Do'stlik", "Forish", "G'allaorol", "Jizzax shahri", "Mirzacho'l", "Paxtakor", "Yangiobod", "Zarbdor", "Zomin", "Sharof Rashidov tumani"],
+        "Xorazm viloyati": ["Urganch", "Xiva", "Bog'ot", "Gurlan", "Qo'shko'pir", "Shovot", "Xonqa", "Yangiariq", "Yangibozor", "Hazorasp"],
+        "Namangan viloyati": ["Namangan", "Chortoq", "Chust", "Kosonsoy", "Mingbuloq", "Norin", "Pop", "To'raqo'rg'on", "Uchqo'rg'on", "Yangiqo'rg'on"],
+        "Navoiy viloyati": ["Navoiy", "Zarafshon", "Karmana", "Qiziltepa", "Navbahor", "Nurota", "Tomdi", "Uchquduq", "Xatirchi"],
+        "Qashqadaryo viloyati": ["Qarshi", "Shahrisabz", "Chiroqchi", "Dehqonobod", "G'uzor", "Koson", "Kitob", "Mirishkor", "Muborak", "Nishon", "Qamashi", "Yakkabog'"],
+        "Samarqand viloyati": ["Samarqand", "Urgut", "Ishtixon", "Jomboy", "Kattaqo'rg'on", "Narpay", "Oqdaryo", "Payariq", "Pastdarg'om", "Paxtachi", "Qo'shrabot", "Toyloq"],
+        "Sirdaryo viloyati": ["Guliston", "Shirin", "Yangiyer", "Boyovut", "Mirzaobod", "Sayxunobod", "Sardoba", "Sirdaryo", "Xovos"],
+        "Surxondaryo viloyati": ["Termiz", "Angor", "Boysun", "Denov", "Jarqo'rg'on", "Muzrabot", "Oltinsoy", "Qiziriq", "Qumqo'rg'on", "Sariosiyo", "Sherobod", "Sho'rchi", "Uzun"],
+        "Qoraqalpog‘iston Respublikasi": ["Nukus", "Amudaryo", "Beruniy", "Chimboy", "Ellikqal'a", "Kegeyli", "Mo‘ynoq", "Qonliko‘l", "Qorao‘zak", "Shumanay", "Taxtako‘pir", "To‘rtko‘l", "Xo‘jayli"]
+    };
+
+    // Profilni tahrirlash funksiyasi
+
+    // Viloyatlar va tumanlarni yuklash funksiyasi
+    const regionSelect = document.getElementById("region");
+    const districtSelect = document.getElementById("district");
+    viloyat = "{{user.viloyat}}"
+    tuman = "{{user.tuman}}"
+
+    function loadRegions() {
+        for (const region in regions) {
+            const option = document.createElement("option");
+            option.value = region;
+            option.textContent = region;
+            if(viloyat == region){
+                option.setAttribute("selected",null)
+                selectedRegion = viloyat
+            }
+            regionSelect.appendChild(option);
+        }
+
+        // Tumanlarni yuklash
+        regionSelect.addEventListener("change", load_district);
+    }
+
+    load_district = () => {
+            const selectedRegion = regionSelect.value;
+
+            // Eski tumanlarni o'chirish
+            districtSelect.innerHTML = "";
+
+            // Yangi tumanlarni qo'shish
+            regions[selectedRegion].forEach(district => {
+                const option = document.createElement("option");
+                option.value = district;
+                option.textContent = district;
+                if(tuman == district){
+                    option.setAttribute("selected",null)
+                }
+                districtSelect.appendChild(option);
+            });
+        }
+    
+    loadRegions()
+    load_district()
+    // Sahifa yuklanganda viloyatlarni yuklash
+    document.addEventListener("DOMContentLoaded", loadRegions);
+
+
+    // Profilni tahrirlash funksiyasi
+    function editProfile() {
+        const inputs = document.querySelectorAll("#fform input[type='text'], #fform input[type='file'], #fform select");
+        const passwordInputs = document.querySelectorAll("#fform input[type='password']");
+        const saveButton = document.getElementById("save-button");
+
+        const passwords = document.querySelectorAll(".passwords");
+        passwords.forEach(i => i.style.display = "none")
+
+        const otherInp = document.querySelectorAll(".otherInp");
+        otherInp.forEach(i => i.style.display = 'flex')
+
+        // Barcha inputlarni yopish
+        inputs.forEach(input => input.disabled = false);
+
+        // Parol inputlarini yopish
+        passwordInputs.forEach(input => input.disabled = true);
+
+        // Profil uchun inputlarni ochish
+        inputs.forEach(input => {
+            if (!input.type.includes("text")) {
+                input.disabled = false;
+            }
+        });
+
+        // Saqlash tugmasini ko‘rsatish
+        saveButton.style.display = "block";
+    }
+
+    // Parolni o'zgartirish funksiyasi
+    function changePassword() {
+        const passwords = document.querySelectorAll(".passwords");
+        passwords.forEach(i => i.style.display = "flex")
+
+        const otherInp = document.querySelectorAll(".otherInp");
+        otherInp.forEach(i => i.style.display = 'none')
+
+
+        const inputs = document.querySelectorAll("#fform input[type='text'], #fform input[type='file'], #fform select");
+
+        const passwordInputs = document.querySelectorAll("#fform input[type='password']");
+        const saveButton = document.getElementById("save-button");
+
+        // Barcha inputlarni yopish
+        inputs.forEach(input => input.disabled = true);
+
+        // Faqat parol inputlarini ochish
+        passwordInputs.forEach(input => {
+            if (input.value === "" || input.type === "text") {
+                input.disabled = false;
+            }
+        });
+
+        // Saqlash tugmasini ko‘rsatish
+        saveButton.style.display = "block";
+    }
+
+
+
+
+</script>
+
+
+
+
+{% endblock content %}

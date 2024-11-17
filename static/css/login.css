@@ -126,11 +126,12 @@ input::placeholder {
 
 .container form div input:focus ~ label,
 .container form div input:valid ~ label {
-    transform: translateY(-100%); 
+    /* transform: translateY(-100%); 
     top: 0;
     font-size: 12px;
     left: 0;
-    font-weight: bold;
+    font-weight: bold; */
+    display: none;
 }
 
 .container form div button {

@@ -197,3 +197,4 @@ class Test(models.Model):
     )
     kirish = models.TextField(max_length=150)
     output = models.CharField(max_length=150)
+    hidden = models.BooleanField(default=True)
