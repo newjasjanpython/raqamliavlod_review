@@ -216,6 +216,7 @@
         <div class="w-fit h-max flex flex-row justify-center items-center gap-3">
             <div class="w-full">
                 {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
                     <div class="flex items-center gap-2 bg-white hover:bg-gray-50 relative">
                         <img id="avatarButton"
                             role="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start"
@@ -224,6 +225,7 @@
                             src="{% if user.profile_image %}{{ request.user.profile_image.url }}{% else %}/static/img/noimage.webp{% endif %}"
                             style="color: transparent;">
                     </div>
+                </a>
                 {% else %}
                 <div class="flex items-center gap-2 bg-white hover:bg-gray-50 relative ppp">
                     <a href="{% url 'signup' %}" class="register">Ro'yxatdan o'tish</a>

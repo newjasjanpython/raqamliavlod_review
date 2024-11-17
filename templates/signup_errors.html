@@ -1,5 +1,4 @@
 {% load static %}
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,13 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login form</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-bottom: 5px;
+            display: block;
+            position: absolute;
+            top: -15px;
+            /* display: none; */
+        }
+
+        .select-container select {
+            width: 100% !important;
+        }
+
+    </style>
 </head>
 
 <body>
     <div class="container">
         <div class="logo">
             <a href="/">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 406 155" fill="none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 406 155" fill="none">
                     <path
                         d="M68.3127 6.0946e-07C65.267 -0.000811295 62.2764 0.809588 59.6506 2.34729L8.4446 32.2997C5.87778 33.8098 3.74949 35.9594 2.26891 38.5372C0.788323 41.115 0.0064038 44.0324 0 47.0025L0 107.088C0.0064038 110.058 0.788323 112.975 2.26891 115.553C3.74949 118.131 5.87778 120.28 8.4446 121.791L59.6506 151.743C62.2761 153.282 65.2667 154.093 68.3127 154.093C71.3587 154.093 74.3492 153.282 76.9747 151.743L128.176 121.791C130.743 120.281 132.872 118.131 134.354 115.554C135.835 112.976 136.618 110.058 136.625 107.088V47.0025C136.618 44.032 135.835 41.1145 134.354 38.5367C132.872 35.9589 130.743 33.8095 128.176 32.2997L76.9747 2.34729C74.3485 0.81075 71.3582 0.000438556 68.3127 6.0946e-07V6.0946e-07Z"
                         fill="white" />
@@ -191,57 +212,70 @@
                 </svg>
             </a>
         </div>
-	<style>.errorlist *{color:red;}</style>
-        <p style="color:red;">{{ form.errors }}</p>
-        <form action="" method="post" class="formContainer">{% csrf_token %}
+        <form class="formContainer" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div>
-                <input type="text" name="first_name" id="firstName" required>
+                <span class="error-message">{{ form.first_name.errors }}</span>
+                <input type="text" name="first_name" value="{% if form.first_name.value %}{{form.first_name.value}}{% endif %}" id="firstName" required>
                 <label for="firstName">Ism kiriting</label>
             </div>
             <div>
-                <input type="text" name="last_name" id="lastName" required>
+                <span class="error-message">{{ form.last_name.errors }}</span>
+                <input type="text" name="last_name" id="lastName" value="{% if form.last_name.value %}{{form.last_name.value}}{% endif %}" required>
                 <label for="lastName">Familiya kiriting</label>
             </div>
             <div>
-                <input type="text" name="username" id="username" required>
+                <span class="error-message">{{ form.username.errors }}</span>
+                <input type="text" name="username" value="{% if form.username.value %}{{form.username.value}}{% endif %}" id="username" required>
                 <label for="username">Foydalanuvchi nomi</label>
             </div>
             <div class="select-container">
-                <select class="region-dropdown" name="viloyat" required>
-                    <option value="">Viloyatni tanlang</option>
-                </select>
-                <select class="district-dropdown" name="tuman" disabled required>
-                    <option value="">Tumanni tanlang</option>
-                </select>
+                <div style="width: 100%;">
+                    <span class="error-message">{{ form.viloyat.errors }}</span>
+                    <select class="region-dropdown" name="viloyat" required>
+                        <option value="">Viloyatni tanlang</option>
+                    </select>
+                </div>
+                <div style="width: 100%;">
+                    <span class="error-message">{{ form.tuman.errors }}</span>
+                    <select class="district-dropdown" name="tuman" disabled required>
+                        <option value="">Tumanni tanlang</option>
+                    </select>
+                </div>
             </div>
             <div id="row">
                 <div class="a">
-                    <input type="text" id="phone" name="telefon" placeholder="+998 __ ___ - __ - __" required>
+                    <span class="error-message">{{ form.telefon.errors }}</span>
+                    <input type="text" id="phone1" value="{% if form.telefon.value %}{{form.telefon.value}}{% endif %}" name="telefon" placeholder="+998 __ ___ - __ - __" required>
                 </div>
                 <div class="a">
-                    <input type="text" name="telegram" id="tg" required>
+                    <span class="error-message">{{ form.telegram.errors }}</span>
+                    <input type="text" value="{% if form.telegram.value %}{{form.telegram.value}}{% endif %}" name="telegram" id="tg" required>
                     <label for="tg">Telegram kiriting</label>
                 </div>
             </div>
             <div>
-                <input type="text" name="maktab" id="school" required>
+                <span class="error-message">{{ form.maktab.errors }}</span>
+                <input type="text" name="maktab" value="{% if form.maktab.value != 'Kiritilmagan' %}{{form.maktab.value}}{% endif %}" id="school" required>
                 <label for="school">Maktab kiriting</label>
             </div>
             <div>
-                <input type="password" name="password1" id="password_1" required>
+                <span class="error-message">{{ form.password1.errors }}</span>
+                <input type="password" value="" name="password1" id="password_1" required>
                 <label for="password_1">Parol kiriting</label>
             </div>
             <div>
-                <input type="password" name="password2" id="password_2" required>
+                <span class="error-message">{{ form.password2.errors }}</span>
+                <input type="password" value="" name="password2" id="password_2" required>
                 <label for="password_2">Parolni takrorlang</label>
             </div>
             <div id="other">
-                <span>Already have an account:</span> <a href="{% url 'login' %}">Kirish</a>
+                <span>Hisobingiz bormi?</span> <a href="{% url 'login' %}">Kirish</a>
             </div>
             <div>
-                <button type="submit">Register</button>
+                <button type="submit">Ro'yhatdan o'tish</button>
             </div>
         </form>
+        
     </div>
 
     
@@ -310,4 +344,4 @@
 
 </body>
 
-</html> 
+</html>

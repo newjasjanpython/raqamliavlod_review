@@ -29,19 +29,21 @@
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         {% for course in courses %}
-                        <div class="swiper-slide w-full min-w-[344px] md:w-[344px] lg:w-[344px] h-[320px] rounded-xl bg-white flex flex-col justify-start items-center p-5 gap-2 box-border">
-                            <img alt="course Image" loading="eager" width="320" height="200" decoding="async"
-                                data-nimg="1" class="w-[320px] h-48 object-cover rounded-lg iii"
-                                src="{{ course.thumb.url }}"
-                                style="color: transparent;">
-                            <section class="w-full flex flex-col justify-start items-start flex-wrap">
-                                <h1 class="text-base md:text-lg lg:text-xl font-semibold">{{ course.title }}</h1>
-                                <p class="text-base font-normal text-blue">{{ course.muallif }}</p>
-                            </section>
-                            <p class="w-full text-left text-sm lg:text-base text-gray-400">{{ course.time }}</p>
-                            <a class="text-white py-2 px-3 text-center w-full rounded-lg flex justify-center items-center gap-2 mt-4 bg-green"
-                               href="{% url 'course-part-detail' course.parts.all.0.id %}">Davom ettirish</a>
-                        </div>
+                        <a href="{% url 'course-part-detail' course.parts.all.0.id %}">
+                            <div class="swiper-slide w-full min-w-[344px] md:w-[344px] lg:w-[344px] h-[320px] rounded-xl bg-white flex flex-col justify-start items-center p-5 gap-2 box-border">
+                                <img alt="course Image" loading="eager" width="320" height="200" decoding="async"
+                                    data-nimg="1" class="w-[320px] h-48 object-cover rounded-lg iii"
+                                    src="{{ course.thumb.url }}"
+                                    style="color: transparent;">
+                                <section class="w-full flex flex-col justify-start items-start flex-wrap">
+                                    <h1 class="text-base md:text-lg lg:text-xl font-semibold">{{ course.title }}</h1>
+                                    <p class="text-base font-normal text-blue">{{ course.muallif }}</p>
+                                </section>
+                                <p class="w-full text-left text-sm lg:text-base text-gray-400">{{ course.time }}</p>
+                                <p class="text-white py-2 px-3 text-center w-full rounded-lg flex justify-center items-center gap-2 mt-4 bg-green"
+                                >Davom ettirish</p>
+                            </div>
+                        </a>
                         {% endfor %}
                     </div>
                 </div>
