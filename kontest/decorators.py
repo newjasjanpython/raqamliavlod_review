@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from .models import Masala
 
-MAX_TIME = timedelta(hours=3)
+MAX_TIME = timedelta(hours=15)
 
 def check_contest_time(fn):
     def wrapper(request, *args, **kwargs):
