@@ -13,6 +13,7 @@ DFILES = pathlib.Path(settings.BASE_DIR / 'dfiles')
 if not DFILES.exists():
     DFILES.mkdir(exist_ok=True)
 
+
 class RunCmdGenerator:
     @staticmethod
     def python3(path, input_string):
@@ -27,8 +28,114 @@ class RunCmdGenerator:
         process.wait()
         if process.returncode != 0:
             raise Exception(f"Error occurred: {stderr}")
-        
+
         return "".join(stdout.split())
+
+    @staticmethod
+    def java(path, input_string):
+        work_dir, _ = path.rsplit(os.sep, 1)
+        if not os.path.exists(os.path.join(work_dir, 'Main.class')):
+            os.rename(path, path.replace('script.file', 'Main.java'))
+            path = path.replace('script.file', 'Main.java')
+            compile_process = subprocess.Popen(
+                ["javac", path],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=work_dir
+            )
+            stdout, stderr = compile_process.communicate()
+            compile_process.wait()
+
+            if compile_process.returncode != 0:
+                raise Exception(f"Compilation error: {stderr}")
+
+        run_process = subprocess.Popen(
+            ["java", "Main"],
+            text=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=work_dir
+        )
+        stdout, stderr = run_process.communicate(input_string)
+        run_process.wait()
+
+        if run_process.returncode != 0:
+            raise Exception(f"Runtime error: {stderr}")
+
+        return "".join(stdout.split())
+
+    @staticmethod
+    def cpp(path, input_string):
+        work_dir, _ = path.rsplit(os.sep, 1)
+        binary_name = "a.out"
+        if not os.path.exists(os.path.join(work_dir, binary_name)):
+            os.rename(path, path.replace('script.file', 'main.cpp'))
+            compile_process = subprocess.Popen(
+                ["g++", path.replace('script.file', 'main.cpp'), "-o", binary_name],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=work_dir
+            )
+            stdout, stderr = compile_process.communicate()
+            compile_process.wait()
+
+            if compile_process.returncode != 0:
+                raise Exception(f"Compilation error: {stderr}")
+
+        run_process = subprocess.Popen(
+            [os.path.join(work_dir, binary_name)],
+            text=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=work_dir
+        )
+        stdout, stderr = run_process.communicate(input=input_string)
+        run_process.wait()
+
+        if run_process.returncode != 0:
+            raise Exception(f"Runtime error: {stderr}")
+
+        return "".join(stdout.split())
+
+    @staticmethod
+    def c(path, input_string):
+        work_dir, _ = path.rsplit(os.sep, 1)
+        binary_name = "a.out"
+        if not os.path.exists(os.path.join(work_dir, binary_name)):
+            os.rename(path, path.replace('script.file', 'main.c'))
+            compile_process = subprocess.Popen(
+                ["gcc", path.replace('script.file', 'main.c'), "-o", binary_name],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=work_dir
+            )
+            stdout, stderr = compile_process.communicate()
+            compile_process.wait()
+
+            if compile_process.returncode != 0:
+                raise Exception(f"Compilation error: {stderr}")
+
+        run_process = subprocess.Popen(
+            [binary_name],
+            text=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=work_dir
+        )
+        stdout, stderr = run_process.communicate(input=input_string)
+        run_process.wait()
+
+        if run_process.returncode != 0:
+            raise Exception(f"Runtime error: {stderr}")
+
+        return "".join(stdout.split())
+
 
 
 class PaizaIO:
@@ -87,12 +194,12 @@ class PaizaIO:
         return None
 
 class Code:
-    def __init__(self, mid, inputs, outputs, code):
+    def __init__(self, mid, inputs, outputs, code, language):
         self.mid = mid
         self.inputs = inputs
         self.outputs = outputs
         self.code = code
-        self.language = "python3"
+        self.language = language
 
     def precheck(self):
         print(self.inputs, self.outputs)
@@ -133,7 +240,7 @@ class Code:
             for index in range(len(self.inputs)):
                 file_input, file_output = self.inputs[index], self.outputs[index]
                 output = func(script_file, file_input)
-                print(output, file_output)  
+                print(output, file_output)
                 if output == "":
                     shutil.rmtree(str(folder))
                     return "Error code"
@@ -145,8 +252,13 @@ class Code:
         shutil.rmtree(str(folder))
 
     def send(self, stdin):
+        print(self.code)
+        print(stdin)
+        print(self.language)
         request_id = PaizaIO.send_request(self.code, self.language, stdin)
         while PaizaIO.check_status(request_id) != "completed":
             time.sleep(1)
+            print(PaizaIO.check_status(request_id))
+        print(PaizaIO.terminal_output(request_id))
         return PaizaIO.terminal_output(request_id).get("stdout").strip('\n').strip()
 

@@ -72,16 +72,72 @@
                         {% endfor %}
                     </div>
                     <div class="w-full h-max flex flex-col justify-center items-start ">
-                        <form class="w-full h-max flex flex-col justify-center items-start" method="post" enctype="multipart/form-data">{% csrf_token %}
-                            <h1 class="w-full text-sm md:text-lg lg:text-xl font-bold">Yechim yuborish</h1>
-                            <section class="w-full flex flex-col flex-nowrap md:flex-row lg:flex-row justify-center items-center gap-4">
-                                <select name="language"
-                                    class="w-full border border-purple-500 flex px-3 py-2 rounded-md bg-white list-none decoration-none outline-none">
+                        <form id="codeForm" class="w-full h-max flex flex-col justify-center items-start" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+<h1 class="w-full text-sm md:text-lg lg:text-xl font-bold">Yechim yuborish</h1>
+
+<div id="editor"></div>
+<textarea id="code" name="code"></textarea>
+
+<section class="w-full flex flex-col flex-nowrap md:flex-row lg:flex-row justify-center items-center gap-4">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.41.0/min/vs/loader.min.js"></script>
+
+    <style>
+        #code { visibility: hidden; }
+        #editor {
+            height: 400px;
+            width: 800px;
+            border: 1px solid #ddd;
+        }
+    </style>
+
+    <script>
+        // Initialize Monaco Editor
+        window.addEventListener('load', () => { let editor;
+
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.41.0/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '// Write your code here...',
+                language: 'cpp', // Default language
+                theme: 'vs-dark'
+            });
+
+            const form = document.getElementById('codeForm');
+            const textarea = document.getElementById('code');
+
+            form.addEventListener('submit', () => {
+                textarea.value = editor.getValue();
+            });
+        });
+
+        });
+    </script>
+
+    <select name="language" id="language" class="w-full border border-purple-500 flex px-3 py-2 rounded-md bg-white list-none decoration-none outline-none">
                                     <option value="C++">C++</option>
                                     <option value="C">C</option>
                                     <option value="Java">Java</option>
                                     <option value="Python">Python</option>
                                 </select>
+
+                                    <script>
+
+                                        window.addEventListener('load', () => {
+                                            const languageSelector = document.getElementById('language');
+                                            languageSelector.addEventListener('change', (event) => {
+                                                const selectedLanguage = event.target.getAttribute('value').toLowerCase();
+                                                if (selectedLanguage == "python") {
+                                                    selectedLanguage = "python3";
+                                                }
+                                                monaco.editor.setModelLanguage(editor.getModel(), selectedLanguage);
+                                            });
+                                        });
+
+
+                                    </script>
+
                                 <label for="CodeFile" class="w-full border border-purple-500 h-max rounded-md flex flex-row justify-between items-center">
                                     <span class="px-4 text-sm md:text-lg lg:text-lg text-gray-500">Fayl tanlang</span>
                                     <span class="h-full bg-purple-500 text-white px-3 py-2 text-center rounded-r-md">Yuklash</span>
