@@ -112,7 +112,7 @@ class UserKontestRelation(models.Model):
         on_delete=models.CASCADE,
         related_name='kontests'
     )
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True)
 
 class UserMasalaRelation(models.Model):
     user = models.ForeignKey(

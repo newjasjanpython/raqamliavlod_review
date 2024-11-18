@@ -16,12 +16,16 @@ def check_contest_time(fn):
             user_contests = request.user.kontests.all()
             for contest in user_contests:
                 if masala in contest.kontest.masalalar.all():
-                    time_difference = current_time - contest.created_at
-                    if time_difference > MAX_TIME:
-                        print("CHECK FAILED")
-                        messages.add_message(request, messages.ERROR, "Sizga test yechish uchun berilgan vaqt tugadi.")
+                    if contest.created_at:
+                        time_difference = current_time - contest.created_at
+                        if time_difference > MAX_TIME:
+                            print("CHECK FAILED")
+                            messages.add_message(request, messages.ERROR, "Sizga test yechish uchun berilgan vaqt tugadi.")
 
-                        return redirect(request.path)
+                            return redirect(request.path)
+                    else:
+                        contest.created_at = now()
+                        contest.save()
                     break
 
         return fn(request, *args, **kwargs)
