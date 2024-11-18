@@ -32,8 +32,8 @@ def get_user_masalalar_ball(user_id):
         ishlangan_masalalar__state='🟢 Passed',
         id=user_id
     ).annotate(
-        num_passed=Count('ishlangan_masalalar', filter=Q(ishlangan_masalalar__state='🟢 Passed')),  # Count passed masalalar for each user
-        total_ball=Sum('ishlangan_masalalar__masala__ball', filter=Q(ishlangan_masalalar__state='🟢 Passed'))  # Sum of balls for passed masalalar
+        num_passed=Count('ishlangan_masalalar', filter=Q(ishlangan_masalalar__state='🟢 Passed'), distinct=True),  # Count passed masalalar for each user
+        total_ball=Sum('ishlangan_masalalar__masala__ball', filter=Q(ishlangan_masalalar__state='🟢 Passed'), distinct=True)  # Sum of balls for passed masalalar
     ).order_by(
         '-total_ball'  # Order by total_ball descending
     ).first()

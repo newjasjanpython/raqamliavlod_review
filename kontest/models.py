@@ -84,19 +84,18 @@ class Masala(models.Model):
         on_delete=models.CASCADE,
         related_name='masalalar'
     )
-    
     ball = models.IntegerField(default=5)
     hidden = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
-    
+
     def umumiy_javoblar(self):
         return 4==self.objects.ishlaganlar.filter(user=self.user, masala=self, state='🟢 Passed').count()
 
     def togri_yechimlar(self):
         return UserMasalaRelation.objects.filter(masala=self, state='🟢 Passed').count()
-    
+
     def qatnashuvchilar(self):
         return self.ishlaganlar.values('user').distinct().count()
 
@@ -113,6 +112,7 @@ class UserKontestRelation(models.Model):
         on_delete=models.CASCADE,
         related_name='kontests'
     )
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 class UserMasalaRelation(models.Model):
     user = models.ForeignKey(
@@ -131,7 +131,8 @@ class UserMasalaRelation(models.Model):
             ('C++','C++'),
             ('C','C'),
             ('Java', 'Java'),
-            ('Python','Python')
+            ('Python','Python'),
+            ('Go','Go')
         )
     )
     script = models.FileField(upload_to=upload_to, null=True, blank=True)
@@ -153,16 +154,21 @@ class UserMasalaRelation(models.Model):
                 inputs.append(test.kirish)
                 outputs.append(test.output)
                 print("Added test", test)
-            if self.script is None:
-                with open():
-                    pass
+
+            try:
+                pass
+            except:
+                print("No file")
+
             with open(self.script.path) as f:
                 code = Code(self.id, inputs, outputs, f.read(), {
-                    'Python': 'python3',
-                    'Java': "java",
+                    "Python": "python3",
+                    "Java": "java",
                     "C": "c",
-                    "C++": "cpp"
+                    "C++": "cpp",
+                    "Go": "go",
                 }[self.language])
+
             passed = False
             if code.precheck() == "Correct code":
                 passed = code.check() == "Correct code"
@@ -186,6 +192,6 @@ class Test(models.Model):
         on_delete=models.CASCADE,
         related_name='tests'
     )
-    kirish = models.TextField(max_length=150)
-    output = models.CharField(max_length=150)
+    kirish = models.TextField()
+    output = models.TextField()
     hidden = models.BooleanField(default=True)
