@@ -132,7 +132,8 @@ class UserMasalaRelation(models.Model):
             ('Python','Python')
         )
     )
-    script = models.FileField(upload_to=upload_to)
+    script = models.FileField(upload_to=upload_to, null=True, blank=True)
+    code = models.TextField(null=True, blank=True)
     script_result = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
     state = models.CharField(
@@ -150,6 +151,9 @@ class UserMasalaRelation(models.Model):
                 inputs.append(test.kirish)
                 outputs.append(test.output)
                 print("Added test", test)
+            if self.script is None:
+                with open():
+                    pass
             with open(self.script.path) as f:
                 code = Code(self.id, inputs, outputs, f.read(), {
                     'Python': 'python3',
