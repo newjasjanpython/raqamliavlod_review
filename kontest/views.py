@@ -2,10 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import models
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Kontest, Masala, UserKontestRelation, UserMasalaRelation
 from users.models import User
 from .forms import UserMasalaRelationForm
+from .decorators import check_contest_time
 
 
 def kontest(request):
@@ -52,7 +54,7 @@ def kontest_detail(request, kontest_id):
     if request.user.is_authenticated:
         if not UserKontestRelation.objects.filter(kontest=kontest, user=request.user).exists():
             UserKontestRelation.objects.create(kontest=kontest, user=request.user)
-    
+
     return render(request, 'kontest_detail.html', {
         'kontest':kontest,
         'pagename':'kontest'
@@ -80,12 +82,12 @@ def kontest_qatnashuvchilar(request, kontest_id):
     })
 
 @login_required(login_url="/users/login/")
+@check_contest_time
 def masala_detail(request, masala_id):
     masala = get_object_or_404(Masala, id=masala_id)
     if masala.hidden:
         return redirect("/")
     if request.method == "POST" and request.user.is_authenticated:
-        
         form = UserMasalaRelationForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
