@@ -46,6 +46,8 @@ class Kontest(models.Model):
         hours, remainder = divmod(time.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         result = 'Tugatildi'
+        if self.start_time < timezone.now():
+            return "Kutilmoqda"
         if self.end_time > timezone.now():
             result = f"Kun: {time.days} Vaqt: {hours}:{minutes}:{seconds}"
         return result
