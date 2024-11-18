@@ -151,7 +151,12 @@ class UserMasalaRelation(models.Model):
                 outputs.append(test.output)
                 print("Added test", test)
             with open(self.script.path) as f:
-                code = Code(self.id, inputs, outputs, f.read())
+                code = Code(self.id, inputs, outputs, f.read(), {
+                    'Python': 'python3',
+                    'Java': "java",
+                    "C": "c",
+                    "C++": "cpp"
+                }[self.language])
             passed = False
             if code.precheck() == "Correct code":
                 passed = code.check() == "Correct code"
