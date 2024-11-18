@@ -37,7 +37,6 @@
                         <span class="p-1 rounded-md text-purple-700 bg-purple-300">Vaqt chegarasi: {{ masala.timeout.seconds }}Ms</span>
                     </div>
                     <div class="w-full flex flex-col justify-start items-start gap-3">
-                        <h1 class="text-sm md:text-lg lg:text-xl font-bold">Batafil</h1>
                         <p class="!text-md">
                             {{ masala.description|safe }}
                         </p>
@@ -45,11 +44,11 @@
                     <div class="w-full flex flex-col justify-start items-start gap-3">
                         <section>
                             <h1 class="text-sm md:text-lg lg:text-xl font-bold">Kirish ma'lumotlari</h1>
-                            <p class="text-md">{{ masala.kirish|safe }}</p>
+                            <p class="text-md">{{ masala.kirish|linebreaks|safe }}</p>
                         </section>
                         <section>
                             <h1 class="text-sm md:text-lg lg:text-xl font-bold">Chiqish ma'lumotlari</h1>
-                            <p class="text-md">{{ masala.chiqish|safe }}</p>
+                            <p class="text-md">{{ masala.chiqish|lienbreaks|safe }}</p>
                         </section>
                     </div> 
                     <div class="w-full h-max flex flex-col flex-nowrap justify-center items-start gap-y-2">

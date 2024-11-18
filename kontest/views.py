@@ -81,6 +81,7 @@ def kontest_qatnashuvchilar(request, kontest_id):
         'pagename':'kontest'
     })
 
+@csrf_exempt
 @login_required(login_url="/users/login/")
 @check_contest_time
 def masala_detail(request, masala_id):
