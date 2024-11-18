@@ -153,9 +153,12 @@ class UserMasalaRelation(models.Model):
                 inputs.append(test.kirish)
                 outputs.append(test.output)
                 print("Added test", test)
-            if self.script is None:
-                with open():
-                    pass
+
+            try:
+                pass
+            except:
+                print("No file")
+
             with open(self.script.path) as f:
                 code = Code(self.id, inputs, outputs, f.read(), {
                     'Python': 'python3',
@@ -163,6 +166,7 @@ class UserMasalaRelation(models.Model):
                     "C": "c",
                     "C++": "cpp"
                 }[self.language])
+
             passed = False
             if code.precheck() == "Correct code":
                 passed = code.check() == "Correct code"
