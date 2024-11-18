@@ -121,7 +121,7 @@ class RunCmdGenerator:
                 raise Exception(f"Compilation error: {stderr}")
 
         run_process = subprocess.Popen(
-            [binary_name],
+            [os.path.join(work_dir, binary_name)],
             text=True,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -232,23 +232,27 @@ class Code:
         script_file = str(folder / 'script.file')
 
         if hasattr(RunCmdGenerator, self.language):
-            with open(script_file, 'w') as file:
-                file.write(self.code)
+            try:
+                with open(script_file, 'w') as file:
+                    file.write(self.code)
 
-            func = getattr(RunCmdGenerator, self.language)
+                func = getattr(RunCmdGenerator, self.language)
 
-            for index in range(len(self.inputs)):
-                file_input, file_output = self.inputs[index], self.outputs[index]
-                output = func(script_file, file_input)
-                print(output, file_output)
-                if output == "":
-                    shutil.rmtree(str(folder))
-                    return "Error code"
-                elif output != file_output:
-                    shutil.rmtree(str(folder))
-                    return "Incorrect code"
-            shutil.rmtree(str(folder))
-            return "Correct code"
+                for index in range(len(self.inputs)):
+                    file_input, file_output = self.inputs[index], self.outputs[index]
+                    output = func(script_file, file_input)
+                    print(output, file_output)
+                    if output == "":
+                        shutil.rmtree(str(folder))
+                        return "Error code"
+                    elif output != file_output:
+                        shutil.rmtree(str(folder))
+                        return "Incorrect code"
+                shutil.rmtree(str(folder))
+                return "Correct code"
+            except:
+                shutil.rmtree(str(folder))
+                return "Error code"
         shutil.rmtree(str(folder))
 
     def send(self, stdin):
