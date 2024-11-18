@@ -64,7 +64,7 @@
                                                             {{ k_user.user.first_name }}
                                                         </td>
                                                         <td class="box-content flex h-fit min-h-[40px] w-full min-w-[160px] flex-wrap items-center justify-center break-words text-center text-base">
-                                                            {{ k_user.user.id|get_user_kontest_ball:kontest.id }}
+                                                            {{ get_user_kontest_ball k_user.user.id kontest.id }}
                                                         </td>
                                                         <td class="box-content flex h-fit min-h-[40px] w-full min-w-[160px] flex-wrap items-center justify-center break-words text-center text-base">
                                                             {{ k_user.user.get_all_balls }}
