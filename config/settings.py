@@ -18,6 +18,8 @@ DEBUG = True    #or True
 CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = ['raqamliavlod.uz', 'www.raqamliavlod.uz', '*']
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880 * 10
+
 CSRF_TRUSTED_ORIGINS = ['https://raqamliavlod.uz', 'https://www.raqamliavlod.uz']
 
 
