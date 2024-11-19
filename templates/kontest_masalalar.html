@@ -62,7 +62,7 @@
                                                         {{ masala.id }}
                                                     </td>
                                                     <td class="box-content flex h-fit min-h-[40px] w-full min-w-[160px] flex-wrap items-center justify-center break-words text-center text-base">
-                                                        {{ masala.title }}
+                                                        <a href="{% url 'masala-detail' masala.id %}">{{ masala.title }}</a>
                                                     </td>
                                                     <td class="box-content flex h-fit min-h-[40px] w-full min-w-[160px] flex-wrap items-center justify-center break-words text-center text-base">
                                                         {{ masala.ishlaganlar.count }}
