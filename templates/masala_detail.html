@@ -44,11 +44,11 @@
                     <div class="w-full flex flex-col justify-start items-start gap-3">
                         <section>
                             <h1 class="text-sm md:text-lg lg:text-xl font-bold">Kirish ma'lumotlari</h1>
-                            <p class="text-md">{{ masala.kirish|linebreaks|safe }}</p>
+                            <p class="text-md">{{ masala.kirish|safe }}</p>
                         </section>
                         <section>
                             <h1 class="text-sm md:text-lg lg:text-xl font-bold">Chiqish ma'lumotlari</h1>
-                            <p class="text-md">{{ masala.chiqish|lienbreaks|safe }}</p>
+                            <p class="text-md">{{ masala.chiqish|safe }}</p>
                         </section>
                     </div> 
                     <div class="w-full h-max flex flex-col flex-nowrap justify-center items-start gap-y-2">
@@ -61,10 +61,10 @@
                                 <section class="w-full h-max flex flex-row justify-center items-start gap-4 px-4 border-b rounded-md border border-purple-500">
                                     <p class="text-sm md:text-bas lg:text-base py-4 w-min flex">{{ forloop.counter }}</p>
                                     <p class="text-sm md:text-bas lg:text-base w-full  border-x border-purple-500 py-4 px-4 flex flex-col justify-start items-start break-words h-full">
-                                        {{ test.kirish }}
+                                        {{ test.kirish|mmk }}
                                     </p>
                                     <p class="text-sm md:text-bas lg:text-base w-full flex flex-col justify-start items-start py-4 break-words">
-                                        {{ test.output }}
+                                        {{ test.output|mmk }}
                                     </p>
                                 </section>
                             {% endif %}
