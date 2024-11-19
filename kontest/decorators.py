@@ -1,11 +1,11 @@
-from datetime import timedelta, datetime
+from datetime import timedelta
 from django.utils.timezone import now
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.shortcuts import redirect
 from .models import Masala
 
-MAX_TIME = timedelta(hours=15)
+MAX_TIME = timedelta(hours=3)
 
 def check_contest_time(fn):
     def wrapper(request, *args, **kwargs):
