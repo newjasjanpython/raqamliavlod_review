@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-^rki&$cm$#qehj-(^%59u^+5*qq6n)2!&!vu#47_u&fo&d50)9
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = True    #or True
+DEBUG = False    #or True
 
 CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = ['raqamliavlod.uz', 'www.raqamliavlod.uz', '*']
