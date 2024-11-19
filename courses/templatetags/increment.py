@@ -25,7 +25,7 @@ def get_mean_rate(obj):
 
 @register.filter
 def get_user_kontest_ball(user_id, kontest_id):
-    res = User.objects.get(id=user_id).ishlangan_masalalar.filter(state='🟢 Passed', masala__kontest_id=kontest_id, distinct=True).annotate(sum_ball=Sum('masala__ball')).first()
+    res = User.objects.get(id=user_id).ishlangan_masalalar.filter(state='🟢 Passed', masala__kontest_id=kontest_id).annotate(sum_ball=Sum('masala__ball', distinct=True)).first()
     if res:
         return res.sum_ball
     else:
