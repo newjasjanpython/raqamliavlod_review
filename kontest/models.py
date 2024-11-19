@@ -25,7 +25,6 @@ class PathAndRename:
             newid = 0
         newid = newid+1
         subprocess.run(["mkdir","-p",f"{settings.MEDIA_ROOT}/scripts/{newid}"])
-        print(os.path.join(self.sub_path, str(newid), filename), 25)
         return os.path.join(self.sub_path, str(newid), filename)
 
 # Usage: Pass 'uploads/' or any base directory you want
@@ -148,18 +147,10 @@ class UserMasalaRelation(models.Model):
 
     def get_script_result(self):
         try:
-            print(self.masala.tests.all())
             inputs, outputs = [], []
             for test in self.masala.tests.all():
                 inputs.append(test.kirish)
                 outputs.append(test.output)
-                print("Added test", test)
-
-            try:
-                pass
-            except:
-                print("No file")
-
             with open(self.script.path) as f:
                 code = Code(self.id, inputs, outputs, f.read(), {
                     "Python": "python3",

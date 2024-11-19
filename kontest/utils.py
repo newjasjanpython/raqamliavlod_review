@@ -76,12 +76,9 @@ class Code:
         self.language = language
 
     def precheck(self):
-        print(self.inputs, self.outputs)
         first_input, first_output = self.inputs[0], self.outputs[0]
 
         output = self.send(first_input)
-        print(output)
-        print(output, first_output, "Precheck", first_input, first_output)
         if output == first_output:
             return "Correct code"
         elif output == "":
@@ -116,7 +113,7 @@ class Code:
                 for index in range(len(self.inputs)):
                     file_input, file_output = self.inputs[index], self.outputs[index]
                     output = func(script_file, file_input)
-                    print(output, file_output)
+
                     if output == "":
                         shutil.rmtree(str(folder))
                         return "Error code"
@@ -131,13 +128,8 @@ class Code:
         shutil.rmtree(str(folder))
 
     def send(self, stdin):
-        print(self.code)
-        print(stdin)
-        print(self.language)
         request_id = PaizaIO.send_request(self.code, self.language, stdin)
         while PaizaIO.check_status(request_id) != "completed":
             time.sleep(1)
-            print(PaizaIO.check_status(request_id))
-        print(PaizaIO.terminal_output(request_id))
         return PaizaIO.terminal_output(request_id).get("stdout").strip('\n').strip()
 

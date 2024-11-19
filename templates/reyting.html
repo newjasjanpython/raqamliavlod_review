@@ -96,15 +96,15 @@
                             {% for p in total_pages %}
                                 {% if forloop.counter < 10 %}
                                     <li class="h-10 w-10 text-black rounded-md h-10 w-12 {% if forloop.counter == page.number %}bg-white{% endif %}">
-                                        <a class="h-full w-full  flex items-center justify-center">{{ forloop.counter }}</a>
+                                        <a class="h-full w-full  flex items-center justify-center" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
                                     </li>
                                 {% endif %}
                                 {% if total_page_count > 9 and total_page_count != 10 %}
                                     <li class="h-10 w-10 text-black rounded-md h-10 w-12 {% if forloop.counter == page.number %}bg-white{% endif %}">
-                                        <a class="h-full w-full  flex items-center justify-center">...</a>
+                                        <a class="h-full w-full  flex items-center justify-center" href="?page={{ forloop.counter }}">...</a>
                                     </li>
                                     <li class="h-10 w-10 text-black rounded-md h-10 w-12 {% if forloop.counter == page.number %}bg-white{% endif %}">
-                                        <a class="h-full w-full  flex items-center justify-center">{{ total_page_count }}</a>
+                                        <a class="h-full w-full flex items-center justify-center" href="?page={{ forloop.counter }}">{{ total_page_count }}</a>
                                     </li>
                                 {% endif %}
                             {% endfor %}

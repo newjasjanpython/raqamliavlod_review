@@ -2,6 +2,7 @@ from django import template
 from users.models import User
 from kontest.models import Masala
 from articles.models import Article
+from django.utils.safestring import mark_safe
 
 from ..models import CoursePart
 
@@ -15,12 +16,16 @@ def next(obj):
     return f'/courses/detail/{obj+1}' if CoursePart.objects.filter(id=obj+1).exists() else '#'
 
 @register.filter
+def mmk(obj):
+    return mark_safe(str(obj).replace('\n', '\n<br>\n'))
+
+@register.filter
 def get_mean_rate(obj):
     return Article.objects.get(id=obj).rates.aggregate(Avg('rate'))['rate__avg']
 
 @register.filter
 def get_user_kontest_ball(user_id, kontest_id):
-    res = User.objects.get(id=user_id).ishlangan_masalalar.filter(state='🟢 Passed', masala__kontest_id=kontest_id).annotate(sum_ball=Sum('masala__ball')).first()
+    res = User.objects.get(id=user_id).ishlangan_masalalar.filter(state='🟢 Passed', masala__kontest_id=kontest_id, distinct=True).annotate(sum_ball=Sum('masala__ball')).first()
     if res:
         return res.sum_ball
     else:

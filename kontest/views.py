@@ -19,7 +19,7 @@ def kontest(request):
 
 def musobaqalar(request):
     kontests = Kontest.objects.all()
-    paginator = Paginator(kontests, 1)
+    paginator = Paginator(kontests, 5)
     page_num = request.GET.get('page',1)
     page = paginator.get_page(page_num)
     return render(request, 'musobaqalar.html', {
@@ -37,7 +37,7 @@ def masalalar(request):
         masalalar = masalalar.filter(title__contains=q, hidden=False)
     else:
         q = ""
-    paginator = Paginator(masalalar, 4)
+    paginator = Paginator(masalalar, 10)
     page_num = request.GET.get('page', 1)
     page = paginator.get_page(page_num)
     return render(request, "masalalar.html", {
@@ -132,7 +132,7 @@ def reyting(request):
     ).order_by(
         '-total_ball'  # Order by total_ball descending
     )
-    paginator = Paginator(users, 5)
+    paginator = Paginator(users, 25)
     page_num = request.GET.get('page', 0)
     page = paginator.get_page(page_num)
 
