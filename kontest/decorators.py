@@ -19,7 +19,6 @@ def check_contest_time(fn):
                     if contest.created_at:
                         time_difference = current_time - contest.created_at
                         if time_difference > MAX_TIME:
-                            print("CHECK FAILED")
                             messages.add_message(request, messages.ERROR, "Sizga test yechish uchun berilgan vaqt tugadi.")
 
                             return redirect(request.path)
